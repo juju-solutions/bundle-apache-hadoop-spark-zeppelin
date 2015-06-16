@@ -2,29 +2,26 @@ apache-hadoop-spark-zeppelin:
   services: 
     "compute-slave": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-compute-slave"
-      num_units: 4
+      num_units: 3
       annotations: 
         "gui-x": "529.8072194689869"
         "gui-y": "698.7443689393118"
+      constraints: mem=4G
     "hdfs-master": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-hdfs-master"
       num_units: 1
       annotations: 
         "gui-x": "514.5964568408597"
         "gui-y": "36.075314561145035"
+      constraints: mem=8G
     "yarn-master": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-yarn-master"
       num_units: 1
       annotations: 
         "gui-x": "713.5973319306017"
         "gui-y": "304.568463364856"
-    client: 
-      charm: "cs:~bigdata-dev/trusty/apache-hadoop-client"
-      num_units: 1
-      annotations: 
-        "gui-x": "54.13702729159422"
-        "gui-y": "34.247391021027056"
-    "hadoop-plugin": 
+      constraints: mem=8G
+    "plugin": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-plugin"
       num_units: 0
       annotations: 
@@ -36,6 +33,7 @@ apache-hadoop-spark-zeppelin:
       annotations: 
         "gui-x": "-33.53419920987062"
         "gui-y": "687.2182405426693"
+      constraints: mem=8G
     zeppelin: 
       charm: "cs:~bigdata-dev/trusty/apache-zeppelin"
       num_units: 0
@@ -45,20 +43,16 @@ apache-hadoop-spark-zeppelin:
   relations: 
     - - "compute-slave:nodemanager"
       - "yarn-master:nodemanager"
-    - - "hadoop-plugin:hadoop-plugin"
+    - - "plugin:hadoop-plugin"
       - "spark:hadoop-plugin"
     - - "yarn-master:namenode"
       - "hdfs-master:namenode"
     - - "zeppelin:spark"
       - "spark:spark"
-    - - "hadoop-plugin:resourcemanager"
+    - - "plugin:resourcemanager"
       - "yarn-master:resourcemanager"
-    - - "hadoop-plugin:namenode"
+    - - "plugin:namenode"
       - "hdfs-master:namenode"
     - - "compute-slave:datanode"
       - "hdfs-master:datanode"
-    - - "client:resourcemanager"
-      - "yarn-master:resourcemanager"
-    - - "client:namenode"
-      - "hdfs-master:namenode"
   series: trusty

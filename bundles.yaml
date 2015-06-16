@@ -4,42 +4,42 @@ apache-hadoop-spark-zeppelin:
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-compute-slave"
       num_units: 3
       annotations: 
-        "gui-x": "529.8072194689869"
-        "gui-y": "698.7443689393118"
+        "gui-x": "300"
+        "gui-y": "200"
       constraints: mem=4G
     "hdfs-master": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-hdfs-master"
       num_units: 1
       annotations: 
-        "gui-x": "514.5964568408597"
-        "gui-y": "36.075314561145035"
+        "gui-x": "600"
+        "gui-y": "350"
       constraints: mem=8G
     "yarn-master": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-yarn-master"
       num_units: 1
       annotations: 
-        "gui-x": "713.5973319306017"
-        "gui-y": "304.568463364856"
+        "gui-x": "600"
+        "gui-y": "100"
       constraints: mem=8G
     "plugin": 
       charm: "cs:~bigdata-dev/trusty/apache-hadoop-plugin"
       num_units: 0
       annotations: 
-        "gui-x": "36.143437128314986"
-        "gui-y": "308.6780519879028"
+        "gui-x": "900"
+        "gui-y": "200"
     spark: 
       charm: "cs:~bigdata-dev/trusty/apache-spark"
       num_units: 1
       annotations: 
-        "gui-x": "-33.53419920987062"
-        "gui-y": "687.2182405426693"
+        "gui-x": "1200"
+        "gui-y": "200"
       constraints: mem=8G
     zeppelin: 
       charm: "cs:~bigdata-dev/trusty/apache-zeppelin"
       num_units: 0
       annotations: 
-        "gui-x": "246.2886363290902"
-        "gui-y": "689.9580476715755"
+        "gui-x": "1200"
+        "gui-y": "450"
   relations: 
     - - "compute-slave:nodemanager"
       - "yarn-master:nodemanager"

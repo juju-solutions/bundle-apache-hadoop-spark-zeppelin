@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import time
 import unittest
 
 import yaml
@@ -26,27 +25,6 @@ class TestBundle(unittest.TestCase):
         cls.secondary = cls.d.sentry['secondary-namenode'][0]
         cls.spark = cls.d.sentry['spark'][0]
         cls.zeppelin = cls.d.sentry['zeppelin'][0]
-
-    @classmethod
-    def tearDownClass(cls):
-        # classmethod inheritance doesn't work quite right with
-        # setUpClass / tearDownClass, so subclasses have to manually call this
-        juju_env = amulet.helpers.default_environment()
-        services = ['hdfs-master', 'yarn-master', 'compute-slave', 'secondary-namenode', 'plugin', 'spark', 'zeppelin']
-
-        def check_env_clear():
-            state = amulet.waiter.state(juju_env=juju_env)
-            for service in services:
-                if state.get(service, {}) != {}:
-                    return False
-            return True
-
-        for service in services:
-            cls.d.remove(service)
-        for i in amulet.helpers.timeout_gen(900):
-            if check_env_clear():
-                break
-            time.sleep(5)
 
     def test_components(self):
         """

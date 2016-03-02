@@ -3,12 +3,12 @@
 This bundle is a 7 node cluster designed to scale out. Built around Apache
 Hadoop components, it contains the following units:
 
-* 1 NameNode (HDFS)
-* 1 ResourceManager (YARN)
-* 3 Slaves (DataNode and NodeManager)
-* 1 Spark
-  - 1 Plugin (colocated on the Spark unit)
-  - 1 Zeppelin (colocated on the Spark unit)
+  * 1 NameNode (HDFS)
+  * 1 ResourceManager (YARN)
+  * 3 Slaves (DataNode and NodeManager)
+  * 1 Spark
+    - 1 Plugin (colocated on the Spark unit)
+    - 1 Zeppelin (colocated on the Spark unit)
 
 
 ## Usage

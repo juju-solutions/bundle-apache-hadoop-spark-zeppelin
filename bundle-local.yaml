@@ -29,14 +29,14 @@ services:
     charm: apache-spark
     num_units: 1
     annotations:
-      gui-x: "1200"
-      gui-y: "200"
+      gui-x: "1300"
+      gui-y: "100"
     constraints: mem=7G
   zeppelin:
     charm: apache-zeppelin
     annotations:
-      gui-x: "1500"
-      gui-y: "200"
+      gui-x: "1300"
+      gui-y: "350"
 series: trusty
 relations:
   - [namenode, slave]

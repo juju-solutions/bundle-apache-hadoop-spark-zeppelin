@@ -93,7 +93,7 @@ Or you can add multiple units at once:
 
 ## Contact Information
 
-- <bigdata-dev@lists.launchpad.net>
+- <bigdata@lists.ubuntu.com>
 
 
 ## Help

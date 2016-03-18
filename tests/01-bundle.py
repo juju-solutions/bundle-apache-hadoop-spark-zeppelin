@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
+import json
 import os
+from operator import itemgetter
+from time import sleep
 import unittest
+from urllib.parse import urljoin
 
-import yaml
 import amulet
+import requests
+import yaml
 
 
 class TestBundle(unittest.TestCase):
@@ -17,6 +22,7 @@ class TestBundle(unittest.TestCase):
             bun = f.read()
         bundle = yaml.safe_load(bun)
         cls.d.load(bundle)
+        cls.d.expose('zeppelin')
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'zeppelin': 'Ready'}, timeout=1800)
         cls.hdfs = cls.d.sentry['namenode'][0]
@@ -109,7 +115,40 @@ class TestBundle(unittest.TestCase):
         assert 'Pi is roughly' in output, 'SparkPI test failed: %s' % output
 
     def test_zeppelin(self):
-        pass  # requires javascript; how to test?
+        notebook_id = 'hdfs-tutorial'
+        zep_addr = self.zeppelin.info['public-address']
+        base_url = 'http://{}:9090/api/notebook/'.format(zep_addr)
+        interp_url = urljoin(base_url, 'interpreter/bind/%s' % notebook_id)
+        job_url = urljoin(base_url, 'job/%s' % notebook_id)
+        para_url = urljoin(base_url, '%s/paragraph/' % notebook_id)
+
+        # bind interpreters
+        interpreters = requests.get(interp_url).json()
+        interp_ids = list(map(itemgetter('id'), interpreters['body']))
+        requests.put(interp_url, data=json.dumps(interp_ids))
+
+        # run notebook
+        requests.post(job_url)
+        for i in amulet.helpers.timeout_gen(60 * 5):
+            sleep(10)  # sleep first to give the job some time to run
+            response = requests.get(job_url)
+            if response.status_code == 500:
+                # sometimes a long-running paragraph will cause the notebook
+                # job endpoint to return 500, but it may eventually recover
+                continue
+            statuses = list(map(itemgetter('status'), response.json()['body']))
+            in_progress = {'PENDING', 'RUNNING'} & set(statuses)
+            if not in_progress:
+                break
+
+        # check for errors
+        errors = []
+        for result in response.json()['body']:
+            if result['status'] == 'ERROR':
+                para_id = result['id']
+                para = requests.get(urljoin(para_url, para_id)).json()
+                errors.append(para['body']['errorMessage'].splitlines()[0])
+        self.assertEqual(errors, [])
 
 
 if __name__ == '__main__':

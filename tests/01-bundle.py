@@ -123,15 +123,20 @@ class TestBundle(unittest.TestCase):
         para_url = urljoin(base_url, '%s/paragraph/' % notebook_id)
 
         # bind interpreters
-        interpreters = requests.get(interp_url).json()
+        interpreters = requests.get(interp_url, timeout=60).json()
         interp_ids = list(map(itemgetter('id'), interpreters['body']))
-        requests.put(interp_url, data=json.dumps(interp_ids))
+        requests.put(interp_url, data=json.dumps(interp_ids), timeout=60)
 
         # run notebook
-        requests.post(job_url)
+        requests.post(job_url, timeout=60)
         for i in amulet.helpers.timeout_gen(60 * 5):
             sleep(10)  # sleep first to give the job some time to run
-            response = requests.get(job_url)
+            try:
+                response = requests.get(job_url, timeout=60)
+            except requests.exceptions.Timeout:
+                # sometimes a long-running paragraph will cause the notebook
+                # job endpoint to timeout, but it may eventually recover
+                continue
             if response.status_code == 500:
                 # sometimes a long-running paragraph will cause the notebook
                 # job endpoint to return 500, but it may eventually recover
@@ -146,8 +151,9 @@ class TestBundle(unittest.TestCase):
         for result in response.json()['body']:
             if result['status'] == 'ERROR':
                 para_id = result['id']
-                para = requests.get(urljoin(para_url, para_id)).json()
-                errors.append(para['body']['errorMessage'].splitlines()[0])
+                resp = requests.get(urljoin(para_url, para_id), timeout=60)
+                para = resp.json()['body']
+                errors.append(para['errorMessage'].splitlines()[0])
         self.assertEqual(errors, [])
 
 

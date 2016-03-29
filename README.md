@@ -1,6 +1,6 @@
 # Apache Hadoop with Spark and Zeppelin
 
-This bundle is a 7 node cluster designed to scale out. Built around Apache
+This bundle is a 6 node cluster designed to scale out. Built around Apache
 Hadoop components, it contains the following units:
 
   * 1 NameNode (HDFS)
@@ -52,10 +52,14 @@ as expected.  You can get more information about that component's smoke test:
 
 ### Access the Zeppelin web interface
 
-Access the Apache Zeppelin web interface at
-`http://{spark_unit_ip_address}:9090`. The IP address can be found by running:
+To access the Apache Zeppelin web interface, first expose the Zeppelin service:
 
-    juju status spark/0 | grep public-address
+    juju expose zeppelin
+
+The web interface is available at the following location (find
+*spark_unit_ip_address* with `juju status spark/0 | grep public-address`):
+
+    http://{spark_unit_ip_address}:9090
 
 
 ### Scale out

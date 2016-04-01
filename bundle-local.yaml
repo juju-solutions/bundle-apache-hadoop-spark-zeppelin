@@ -27,6 +27,8 @@ services:
       gui-y: "200"
   spark:
     charm: apache-spark
+    options:
+      spark_execution_mode: yarn-client
     num_units: 1
     annotations:
       gui-x: "1300"

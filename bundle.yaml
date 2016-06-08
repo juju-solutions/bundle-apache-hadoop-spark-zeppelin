@@ -1,39 +1,41 @@
 services:
   namenode:
-    charm: cs:trusty/apache-hadoop-namenode-1
+    charm: cs:trusty/apache-hadoop-namenode-2
     num_units: 1
     annotations:
       gui-x: "600"
       gui-y: "350"
     constraints: mem=7G
   resourcemanager:
-    charm: cs:trusty/apache-hadoop-resourcemanager-1
+    charm: cs:trusty/apache-hadoop-resourcemanager-3
     num_units: 1
     annotations:
       gui-x: "600"
       gui-y: "100"
     constraints: mem=7G
   slave:
-    charm: cs:trusty/apache-hadoop-slave-1
+    charm: cs:trusty/apache-hadoop-slave-2
     num_units: 3
     annotations:
       gui-x: "250"
       gui-y: "200"
     constraints: mem=7G
   plugin:
-    charm: cs:trusty/apache-hadoop-plugin-13
+    charm: cs:trusty/apache-hadoop-plugin-14
     annotations:
       gui-x: "950"
       gui-y: "200"
   spark:
-    charm: cs:trusty/apache-spark-7
+    charm: cs:trusty/apache-spark-9
     num_units: 1
+    options:
+      spark_execution_mode: "yarn-client"
     annotations:
       gui-x: "1300"
       gui-y: "100"
     constraints: mem=7G
   zeppelin:
-    charm: cs:trusty/apache-zeppelin-6
+    charm: cs:trusty/apache-zeppelin-7
     annotations:
       gui-x: "1300"
       gui-y: "350"
